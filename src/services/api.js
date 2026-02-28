@@ -6,7 +6,11 @@
 //  fetch() directly — keeping API logic centralised.
 // ============================================================
 
-const BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
+// In production on Vercel the backend is exposed under `/api` on the
+// same origin as the React app. For local development you can either:
+//   - set REACT_APP_API_URL=http://localhost:5000/api, or
+//   - rely on a proxy if configured.
+const BASE_URL = process.env.REACT_APP_API_URL || "/api";
 
 /* ── Internal: read JWT from localStorage ── */
 const getToken = () => localStorage.getItem("sc_token");

@@ -69,20 +69,26 @@ app.use("/api/users", userRoutes);
 app.use(notFound);
 app.use(errorHandler);
 
-/* ─────────────────────── START ─────────────────────── */
+/* ─────────────────────── START (local server only) ─────────────────────── */
 
-app.listen(PORT, () => {
-  console.log("╔═════════════════════════════════════════════════╗");
-  console.log("║   🌿  SCRAP-CRAFTERS API  (PostgreSQL Edition)  ║");
-  console.log(`║   🚀  http://localhost:${PORT}                      ║`);
-  console.log(`║   🐘  DB: ${(process.env.PGDATABASE || "scrapcrafters").padEnd(37)}║`);
-  console.log(`║   🌍  ${(process.env.NODE_ENV || "development").padEnd(42)}║`);
-  console.log("╠═════════════════════════════════════════════════╣");
-  console.log("║  Setup:  npm run db:init  →  npm run db:seed    ║");
-  console.log("║  Reset:  npm run db:reset                       ║");
-  console.log("╚═════════════════════════════════════════════════╝");
-});
+// When running on Vercel, this file is imported by the serverless
+// function handler and must NOT call app.listen(). Vercel sets the
+// VERCEL env var to "1" inside serverless functions, so we use that
+// to skip starting a standalone HTTP server there.
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log("╔═════════════════════════════════════════════════╗");
+    console.log("║   🌿  SCRAP-CRAFTERS API  (PostgreSQL Edition)  ║");
+    console.log(`║   🚀  http://localhost:${PORT}                      ║`);
+    console.log(`║   🐘  DB: ${(process.env.PGDATABASE || "scrapcrafters").padEnd(37)}║`);
+    console.log(`║   🌍  ${(process.env.NODE_ENV || "development").padEnd(42)}║`);
+    console.log("╠═════════════════════════════════════════════════╣");
+    console.log("║  Setup:  npm run db:init  →  npm run db:seed    ║");
+    console.log("║  Reset:  npm run db:reset                       ║");
+    console.log("╚═════════════════════════════════════════════════╝");
+  });
 
-process.on("SIGTERM", () => { console.log("\n⏹️  Shutting down…"); process.exit(0); });
+  process.on("SIGTERM", () => { console.log("\n⏹️  Shutting down…"); process.exit(0); });
+}
 
 module.exports = app;
